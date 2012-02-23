@@ -37,7 +37,7 @@ class tx_t3deploy_dispatch extends t3lib_cli {
 			'synopsis' => self::ExtKey . ' controller action ###OPTIONS###',
 			'description' => '',
 			'examples' => 'typo3/cli_dispatch.phpsh ' . self::ExtKey . ' database updateStructure',
-			'author' => '(c) 2010 AOE media GmbH <dev@aoemedia.de>',
+			'author' => '(c) 2010 AOE media GmbH <dev@aoemedia.de>,(c) 2012 Tryweb V.O.F. <support@tryweb.nl>',
 		));
 	}
 
