@@ -31,7 +31,7 @@ class tx_t3deploy_cacheController {
 				
 		$this->setTCE();
         // this seems to initalized a BE-User
-        $TCE->start(Array(),Array());
+        $this->TCE->start(Array(),Array());
         // so this line does not throw an error any more
         #$TCE->clear_cache('tt_news',$oneRecordId);
 	
@@ -73,8 +73,18 @@ $tce->clear_cacheCmd(40);  // ID of the page for which to clear the cache
 	
 	}
 	
-	public function cacheAction(){
+	/**
+	 * Updates the database structure.
+	 *
+	 * @param array $arguments Optional arguemtns passed to this action
+	 * @return string
+	 */
+	public function clearcacheAction(){
+		
 		$this->TCE->clear_cacheCmd('all');
+		
+		#if()
+		$this->TCE->removeCacheFiles();
 	}
 	
 	private function setTCE(){
