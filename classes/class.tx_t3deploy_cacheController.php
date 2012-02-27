@@ -20,20 +20,21 @@ t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_install.php');
 class tx_t3deploy_cacheController {
 
 	/**
+	 * object <t3lib_TCEmain>
+	 */
+	protected $TCE;
+	
+	/**
 	 * Creates this object.
 	 */
 	public function __construct() {
-		
-		$this->install = t3lib_div::makeInstance('t3lib_install');
-		$this->setLoadedExtensions($GLOBALS['TYPO3_LOADED_EXT']);
-		$this->setConsideredTypes($this->getUpdateTypes());
-		
-		
-		$TCE = t3lib_div::makeInstance('t3lib_TCEmain');
+				
+		$this->setTCE();
         // this seems to initalized a BE-User
         $TCE->start(Array(),Array());
         // so this line does not throw an error any more
-        $TCE->clear_cache('tt_news',$oneRecordId);
+        #$TCE->clear_cache('tt_news',$oneRecordId);
+	
 		
 		/*function clearpagecache($pid_list) {
 $tce = t3lib_div::makeInstance('t3lib_TCEmain');
@@ -54,7 +55,7 @@ ini_set('error_reporting', E_ALL ^ E_NOTICE);
 
 require_once (PATH_t3lib.'class.t3lib_div.php'); 
 require_once (PATH_t3lib.'class.t3lib_extmgm.php'); 
-require_once (PATH_t3lib.'class.t3lib_tcemain.php'); 
+√require_once (PATH_t3lib.'class.t3lib_tcemain.php'); 
 
 require_once(PATH_t3lib.'config_default.php'); 
 
@@ -64,11 +65,23 @@ $TYPO3_DB = t3lib_div::makeInstance('t3lib_db');
 $TYPO3_DB->sql_pconnect (TYPO3_db_host, TYPO3_db_username, TYPO3_db_password); 
 $TYPO3_DB->sql_select_db (TYPO3_db); 
 
-$tce = t3lib_div::makeInstance('t3lib_TCEmain'); 
+√$tce = t3lib_div::makeInstance('t3lib_TCEmain'); 
 $tce->clear_cacheCmd(40);  // ID of the page for which to clear the cache 
 
 ?> 
 		 */
 	
+	}
+	
+	public function cacheAction(){
+		$this->TCE->clear_cacheCmd('all');
+	}
+	
+	private function setTCE(){
+		$this->TCE = t3lib_div::makeInstance('t3lib_TCEmain');
+	}
+	
+	public function getTCE(){
+		return $this->TCE;
 	}
 }
