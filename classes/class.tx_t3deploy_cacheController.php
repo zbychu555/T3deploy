@@ -8,6 +8,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+t3lib_div::requireOnce(t3lib_extMgm::extPath('t3deploy'). 'classes/class.tx_t3deploy_abstract.php');
 t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_install.php');
 
 /**
@@ -17,7 +18,7 @@ t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_install.php');
  * @author Oliver Hader <oliver.hader@aoemedia.de>
  *
  */
-class tx_t3deploy_cacheController {
+class tx_t3deploy_cacheController extends tx_t3deploy_abstract {
 
 	/**
 	 * object <t3lib_TCEmain>
@@ -30,8 +31,10 @@ class tx_t3deploy_cacheController {
 	public function __construct() {
 				
 		$this->setTCE();
-        // this seems to initalized a BE-User
-        $this->TCE->start(Array(),Array());	
+        // this seems to initalized a BE
+        $this->TCE->start(Array(),Array());
+		// We need a admin user to clear the full cache
+		$this->TCE->admin = TRUE;
 	}
 	
 	/**
@@ -42,11 +45,9 @@ class tx_t3deploy_cacheController {
 	 */
 	public function clearcacheAction(){
 		
-		// The option all clears all Tables, IF the user has the TSconfig settings or is admin. We don't want a CLI user with Admin priveledges!!!!
+		// The option all clears all cache Tables & Files
 		$this->TCE->clear_cacheCmd('all');
-		
-		// The BE user (_cli_t3deploy) needs to be ADMIN to run this command via clear_cacheCmd, therefor we run the removeCacheFiles directly
-		$this->TCE->removeCacheFiles();
+		$this->printMessage('T3Deploy: All Caches purged!', 0, FALSE);
 	}
 	
 	/**
