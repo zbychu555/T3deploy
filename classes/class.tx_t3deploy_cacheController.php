@@ -9,7 +9,6 @@
 ***************************************************************/
 
 t3lib_div::requireOnce(t3lib_extMgm::extPath('t3deploy'). 'classes/class.tx_t3deploy_abstract.php');
-t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_install.php');
 
 /**
  * Controller that handles database actions of the t3deploy process inside TYPO3.
