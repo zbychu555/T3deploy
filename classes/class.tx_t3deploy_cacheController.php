@@ -139,3 +139,4 @@ class tx_t3deploy_cacheController {
 		return $this->help;
 	}
 }
+?>

@@ -110,3 +110,4 @@ class tx_t3deploy_dispatch extends t3lib_cli {
 		return $result;
 	}
 }
+?>
