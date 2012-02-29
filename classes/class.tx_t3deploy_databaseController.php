@@ -8,7 +8,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-t3lib_div::requireOnce(t3lib_extMgm::extPath('t3deploy'). 'classes/class.tx_t3deploy_abstract.php');
 t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_install.php');
 
 /**
@@ -18,7 +17,7 @@ t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_install.php');
  * @author Oliver Hader <oliver.hader@aoemedia.de>
  *
  */
-class tx_t3deploy_databaseController extends tx_t3deploy_abstract {
+class tx_t3deploy_databaseController {
 	/*
 	 * List of all possible update types:
 	 *	+ add, change, drop, create_table, change_table, drop_table, clear_table
@@ -119,8 +118,6 @@ class tx_t3deploy_databaseController extends tx_t3deploy_abstract {
 		$isRemovalEnabled = (isset($arguments['--remove']) || isset($arguments['-r']));
 		$isVerboseEnabled = (isset($arguments['--verbose']) || isset($arguments['-v']));
 		$database = (isset($arguments['--database']) && $arguments['--database'] ? $arguments['--database'] : TYPO3_db);
-
-		t3lib_div::devLog('t3deploy Structure DifferencesForUpdate', 'T3Deploy', 0, $this->getStructureDifferencesForUpdate($database, $allowKeyModifications));
 		
 		$changes = $this->install->getUpdateSuggestions(
 			$this->getStructureDifferencesForUpdate($database, $allowKeyModifications)
@@ -278,12 +275,10 @@ class tx_t3deploy_databaseController extends tx_t3deploy_abstract {
 
 		foreach ($this->loadedExtensions as $extension) {
 			if (is_array($extension) && $extension['ext_tables.sql'])	{
-				t3lib_div::devLog('t3deploy Extension details', 'T3Deploy', 0, $extension);
 				$rawDefinitions[] = file_get_contents($extension['ext_tables.sql']);
 			}
 		}
 
-		t3lib_div::devLog('t3deploy Raw Structure:', 'T3Deploy', 0, $rawDefinitions);
 		return $rawDefinitions;
 	}
 
