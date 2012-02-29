@@ -300,3 +300,4 @@ class tx_t3deploy_databaseController {
 		return t3lib_div::trimExplode(',', self::RemoveTypes_list, TRUE);
 	}
 }
+?>
