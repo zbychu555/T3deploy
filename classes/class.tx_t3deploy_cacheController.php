@@ -12,7 +12,7 @@
  * Controller that handles database actions of the t3deploy process inside TYPO3.
  *
  * @package t3deploy
- * @author Oliver Hader <oliver.hader@aoemedia.de>
+ * @author Sebastiaan van Parijs <svparijs@tryweb.nl>
  *
  */
 class tx_t3deploy_cacheController {
