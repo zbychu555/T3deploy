@@ -21,4 +21,5 @@ For this tool to run it will need a backend CLI user named '_cli_t3deploy' and a
 | Create tables based on ext_tables.sql                                                            | Done                |
 
 # Quick start
+## Usage
 To be written...
