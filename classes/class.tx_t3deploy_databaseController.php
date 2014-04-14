@@ -8,8 +8,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_install.php');
-
 /**
  * Controller that handles database actions of the t3deploy process inside TYPO3.
  *
@@ -17,7 +15,7 @@ t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_install.php');
  * @author Oliver Hader <oliver.hader@aoemedia.de>
  *
  */
-class tx_t3deploy_databaseController {
+class tx_t3deploy_databaseController implements \TYPO3\CMS\Core\SingletonInterface {
 	/*
 	 * List of all possible update types:
 	 *	+ add, change, drop, create_table, change_table, drop_table, clear_table
@@ -28,12 +26,12 @@ class tx_t3deploy_databaseController {
 	const RemoveTypes_list = 'drop,drop_table,clear_table';
 
 	/**
-	 * @var t3lib_install
+	 * @var \TYPO3\CMS\Install\Sql\SchemaMigrator
 	 */
 	protected $install;
 
 	/**
-	 * @var array
+	 * @var \TYPO3\CMS\Core\Compatibility\LoadedExtensionsArray
 	 */
 	protected $loadedExtensions;
 
@@ -43,10 +41,18 @@ class tx_t3deploy_databaseController {
 	protected $consideredTypes;
 
 	/**
+	 * @var \TYPO3\CMS\Core\Database\DatabaseConnection
+	 */
+	protected $database;
+	/**
 	 * Creates this object.
 	 */
 	public function __construct() {
-		$this->install = t3lib_div::makeInstance('t3lib_install');
+		//$this->install = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_install');
+		/** @var \TYPO3\CMS\Install\Sql\SchemaMigrator install */
+		$this->install = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Install\Sql\SchemaMigrator');
+		/** @var \TYPO3\CMS\Core\Database\DatabaseConnection database */
+		$this->database = $GLOBALS['TYPO3_DB'];
 		$this->setLoadedExtensions($GLOBALS['TYPO3_LOADED_EXT']);
 		$this->setConsideredTypes($this->getUpdateTypes());
 	}
@@ -54,10 +60,11 @@ class tx_t3deploy_databaseController {
 	/**
 	 * Sets information concerning all loaded TYPO3 extensions.
 	 *
-	 * @param array $loadedExtensions
+	 * @param \TYPO3\CMS\Core\Compatibility\LoadedExtensionsArray $loadedExtensions
 	 * @return void
 	 */
-	public function setLoadedExtensions(array $loadedExtensions) {
+	public function setLoadedExtensions($loadedExtensions) {
+		/** @var  \TYPO3\CMS\Core\Compatibility\LoadedExtensionsArray loadedExtensions */
 		$this->loadedExtensions = $loadedExtensions;
 	}
 
@@ -125,7 +132,7 @@ class tx_t3deploy_databaseController {
 
 		if ($isRemovalEnabled) {
 				// Disable the delete prefix, thus tables and fields can be removed directly:
-			$this->install->deletedPrefixKey = '';
+			$this->install->setDeletedPrefixKey('');
 				// Add types considered for removal:
 			$this->addConsideredTypes($this->getRemoveTypes());
 				// Merge update suggestions:
@@ -249,7 +256,6 @@ class tx_t3deploy_databaseController {
 	 * @return array The accordant definitions
 	 */
 	protected function getDefinedFieldDefinitions() {
-		$content = '';
 
 		if (method_exists($this->install, 'getFieldDefinitions_fileContent')) {
 			$content = $this->install->getFieldDefinitions_fileContent (
@@ -271,14 +277,12 @@ class tx_t3deploy_databaseController {
 	 */
 	protected function getAllRawStructureDefinitions() {
 		$rawDefinitions = array();
-		$rawDefinitions[] = file_get_contents(PATH_t3lib . 'stddb/tables.sql');
-
-		foreach ($this->loadedExtensions as $extension) {
-			if (is_array($extension) && $extension['ext_tables.sql'])	{
-				$rawDefinitions[] = file_get_contents($extension['ext_tables.sql']);
+		foreach ($this->loadedExtensions as $extKey => $extension) {
+			if (is_array($extension) && $extension['ext_tables.sql']) {
+				$rawDefinitions[] = file_get_contents(TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey) . 'ext_tables.sql');
 			}
-		}
 
+		}
 		return $rawDefinitions;
 	}
 
@@ -288,7 +292,7 @@ class tx_t3deploy_databaseController {
 	 * @return array
 	 */
 	protected function getUpdateTypes() {
-		return t3lib_div::trimExplode(',', self::UpdateTypes_List, TRUE);
+		return \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', self::UpdateTypes_List, TRUE);
 	}
 
 	/**
@@ -297,7 +301,7 @@ class tx_t3deploy_databaseController {
 	 * @return array
 	 */
 	protected function getRemoveTypes() {
-		return t3lib_div::trimExplode(',', self::RemoveTypes_list, TRUE);
+		return \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', self::RemoveTypes_list, TRUE);
 	}
 }
 ?>

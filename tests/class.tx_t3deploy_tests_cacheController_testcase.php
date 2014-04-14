@@ -17,7 +17,7 @@ require_once PATH_tx_t3deploy . 'classes/class.tx_t3deploy_cacheController.php';
  * @author Oliver Hader <oliver.hader@aoemedia.de>
  */
 class tx_t3deploy_tests_cacheController_testcase extends tx_phpunit_testcase {
-	
+
 	/**
 	 * @var tx_t3deploy_cacheController
 	 */
