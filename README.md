@@ -23,13 +23,21 @@ For this tool to run it will need a backend CLI user named '_cli_t3deploy' and a
 # Quick start
 
 php typo3/cli_dispatch.phpsh t3deploy cache clearcache
+
 --pid
+
 --temp_CACHED
+
 --pages
+
 --all
+
 --help
 
 php typo3/cli_dispatch.phpsh t3deploy database updateStructure
+
 --verbose - Show the the Statements in the output.
+
 --execute - Execute the sql statement direct.
+
 --remove - Add the remove statement of columns.
