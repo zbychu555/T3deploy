@@ -101,7 +101,7 @@ class tx_t3deploy_cacheController {
 	 * @return void
 	 */
 	private function setTCE(){
-		$this->TCE = t3lib_div::makeInstance('t3lib_TCEmain');
+		$this->TCE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\DataHandling\DataHandler');
 	}
 	
 	/**
